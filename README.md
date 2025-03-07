@@ -1,0 +1,1 @@
+Welcome to the Learning Platform project.This is a full-stack web application built to help users easily access learning resources and enhance their skills.

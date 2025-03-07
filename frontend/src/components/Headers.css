@@ -1,0 +1,36 @@
+.header{
+    border:2px solid black;
+    border:none;
+    box-shadow: 0px 5px 5px rgb(138, 124, 128);
+    border-radius: 10px;
+    display:flex;
+    height:75px;
+    /* position: fixed; */
+    /* max-width: 100%; */
+}
+#heading
+{
+    color: blue;
+    margin-left: 460px;
+}
+.btns
+{
+    display: flex;
+    gap:8px;
+    margin-left:320px;
+    margin-top:20px;
+    height:40px;
+}
+.login,.signup
+{
+    background-color: lightgray;
+    color:black;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 10px;
+}
+.login:hover,.signup:hover
+{
+    background-color: green;
+    color: white;
+} 

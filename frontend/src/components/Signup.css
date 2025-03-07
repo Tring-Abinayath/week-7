@@ -1,0 +1,72 @@
+.signup-containter {
+    border: 2px solid black;
+    border-radius: 10px;
+    width: 600px;
+    height: 470px;
+    text-align: center;
+    margin-left: 350px;
+    margin-top: 20px;
+    overflow: auto;
+}
+
+#signup{
+    text-align: center;   
+    color: blue;  
+}
+
+input {
+    border: 2px solid black;
+    width: 400px;
+    padding: 10px;
+    margin-top: 20px;
+    border-radius: 10px;
+    font-size: 15px;
+}
+input:focus
+{
+    font-size:16px;
+    font-weight: bold;
+}
+.signup_btn {
+    display: block;
+    margin-left:260px;
+    margin-top:30px;
+    margin-bottom: 10px;
+    border:3px solid black;
+    border-radius: 10px;
+    font-weight: bold;
+    width:78px;
+    height:40px;
+    cursor: pointer;
+    padding:10px;
+    background-color: lightgray;
+}
+.signup_btn:hover
+{
+    background-color: green;
+    color:white;
+}
+.password-eye-icon {
+    position: absolute;
+    right: 420px; 
+    top: 58%;
+    cursor: pointer;
+    font-size: 20px;  
+}
+.error
+{
+    display: block;
+    color:red;
+    text-align: left;
+    margin-left:100px;
+    margin-top:5px;
+}
+
+.existUser
+{
+    color:red;
+    font-weight: bold;
+    margin-left:15px;
+    margin-top:10px;
+}
+

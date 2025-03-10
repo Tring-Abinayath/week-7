@@ -1,20 +1,33 @@
 import Home from './Headers.jsx';
 import './Signin.css';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useForm } from 'react-hook-form';
 
-import {gql,useMutation} from '@apollo/client'
+import { gql, useLazyQuery, useMutation } from '@apollo/client'
 
-const SIGNIN_MUTATION=gql`
+const SIGNIN_MUTATION = gql`
     mutation signin($email:String!,$password:String!){
         signin(email:$email,password:$password){
             token   
-            email
+            #email
         }
     }
 `;
+
+const GET_USERS_QUERY = gql`
+    query{
+        getUsers {
+            user_id
+            user_name
+            email
+            role
+        }
+    }
+`;
+
+
 
 function Signin() {
 
@@ -22,33 +35,53 @@ function Signin() {
     const navigate = useNavigate();
     const [error, setError] = useState(null)
 
-    const [signinMutation]=useMutation(SIGNIN_MUTATION,{
-        fetchPolicy:"no-cache",
-        onCompleted:(data)=>{
+    const [signinMutation] = useMutation(SIGNIN_MUTATION, {
+        fetchPolicy: "no-cache",
+        onCompleted:async (data) => {
             console.log(data)
-            localStorage.setItem('token',data.signin.token)
-            localStorage.setItem('userEmail',data.signin.email)
-            navigate('/UserDashboard')
+            localStorage.setItem('token', data.signin.token)
+            await getUsers()
         },
-        onError:(err)=>{
-            console.log("On Error:",err)
+        onError: (err) => {
+            console.log("On Error:", err)
             setError(err.message)
         }
     })
 
-    const signin = async(values) => {
+    const [getUsers] = useLazyQuery(GET_USERS_QUERY, {
+        fetchPolicy: "no-cache",
+        onCompleted: (data) => {
+            console.log("GetUser Data:",data)
+            console.log("Data getUser role",data.getUsers[0].role)
+            if(data.getUsers[0].role==='admin'){
+                navigate('/AdminDashboard')
+            }else{
+                navigate('/UserDashboard')
 
-       console.log("values:",values)
+            }
+        },
+        onError: (err) => {
+            console.log("On Error:", err)
+            setError(err.message)
+        }
+    })
 
-        try{
+    const signin = async (values) => {
+
+        localStorage.setItem('isLoggedIn',true)
+        console.log("isLogin after signin",localStorage.getItem('isLoggedIn'))
+
+        console.log("values:", values)
+
+        try {
             await signinMutation({
-                variables:{
-                    email:values.email,
-                    password:values.password
+                variables: {
+                    email: values.email,
+                    password: values.password
                 }
             })
-        }catch{
-            console.log("Error during GrahSQL request",err)
+        } catch {
+            console.log("Error during GrahSQL request", err)
         }
 
     }
@@ -60,9 +93,10 @@ function Signin() {
     const {
         register,
         handleSubmit,
-        formState: { errors },
-        reset
+        formState: { errors }
     } = useForm();
+
+    
 
     return (
         <>

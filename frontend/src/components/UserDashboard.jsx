@@ -1,10 +1,11 @@
-import { useEffect,useState } from 'react';
-import { useLazyQuery, gql } from '@apollo/client'
-import './UserDashboard.css'
+import { useEffect, useState } from 'react';
+import { useLazyQuery, gql, useMutation } from '@apollo/client';
+import './UserDashboard.css';
+import { useNavigate } from 'react-router-dom';
 
 const GET_USERS = gql`
-    query{
-        getUsers{
+    query {
+        getUsers {
             user_id
             user_name
             email
@@ -12,43 +13,226 @@ const GET_USERS = gql`
     }
 `;
 
+const GET_COURSES = gql`
+    query {
+        getCourses {
+            course_id
+            course_name
+            #status
+        }
+    }
+`;
+
+const ADD_USER_COURSES = gql`
+    mutation addUserCourses($courseId:Int!,$courseName:String!){
+        addUserCourses(course_id:$courseId,course_name:$courseName)
+    }
+`;
+
+const GET_USER_COURSES = gql`
+    query{
+        getUserCourses{
+            user_id
+            course_id
+            course_name
+        }
+    }
+`;
+
+
+
 function UserDashboard() {
-
-    const userEmail = localStorage.getItem('userEmail');
     const [user, setUser] = useState(null);
+    const [selectedTab, setSelectedTab] = useState('courseList');
+    const [courses, setCourses] = useState([]);
+    const [completedCourses, setCompletedCourses] = useState([]);
+    const [yourCourses, setYourCourses] = useState([]);
 
+    const navigate = useNavigate();
 
     const [getUsersQuery] = useLazyQuery(GET_USERS, {
         fetchPolicy: 'no-cache',
         onCompleted: (data) => {
-            console.log("Data:", data)
-            const foundUser = data?.getUsers?.find(u => u.email === userEmail);
-            if (foundUser) {
-                setUser(foundUser); // Set the user state
-                console.log("Signed User:", foundUser);
-            }
+            console.log('Data:', data);
+            console.log(data.getUsers[0].user_name)
+            setUser(data.getUsers[0].user_name);
         },
         onError: (err) => {
-            console.log("Errr:", err.message)
+            console.log('Errr:', err.message);
         }
-    })
+    });
+
+
+
+    const [getCoursesQuery] = useLazyQuery(GET_COURSES, {
+        fetchPolicy: 'no-cache',
+        onCompleted: (data) => {
+            console.log('Courses Data:', data);
+            const allCourses = data?.getCourses || [];
+            setCourses(allCourses)
+        },
+        onError: (err) => {
+            console.log('Errr:', err.message);
+        }
+    });
+
+    const [addUsersCoursesMutation] = useMutation(ADD_USER_COURSES, {
+        fetchPolicy: 'no-cache',
+        onCompleted: (data) => {
+            console.log('Data:', data);
+        },
+        onError: (err) => {
+            console.log('Errr:', err.message);
+        }
+    });
+
+    const [getUserCoursesQuery] = useLazyQuery(GET_USER_COURSES, {
+        fetchPolicy: 'no-cache',
+        onCompleted: (data) => {
+            console.log('Data---:', data);
+            const enrolledCourse = data?.getUserCourses || [];
+
+            setYourCourses(enrolledCourse)
+
+            console.log("Enrolled COurses----:", data?.getUserCourses || [])
+
+        },
+        onError: (err) => {
+            console.log('Errr:', err.message);
+        }
+    });
+
 
     useEffect(() => {
-        getUsersQuery()
-    }, [])
+        console.log("Inside useeffect")
+        getUsersQuery();
+        getCoursesQuery();
+        getUserCoursesQuery();
+    }, []);
+
+    const handleEnroll = async (course) => {
+
+        setYourCourses([...yourCourses, course]);
+        setCourses(courses.filter(c => c.course_id !== course.course_id))
+
+        try {
+            await addUsersCoursesMutation({
+                variables: {
+                    courseId: course.course_id,
+                    courseName: course.course_name
+                }
+            })
+        } catch (error) {
+            throw new Error("Error during graphql request", error)
+        }
+
+    };
+
+    console.log("your Courses:", yourCourses)
 
     if (!user) {
         return <p>Loading user...</p>;
-      }
+    }
+
+    const handleLogout = () => {
+        localStorage.setItem('isLoggedIn', false);
+        localStorage.removeItem('token');
+        navigate('/signin');
+    }
 
     return (
         <>
-        <div className='user'>
-            <h1>HI {user.user_name},</h1>
-            <h1>Welcome to Tring Courses</h1>
-        </div>
+            <div className="user">
+                <h1>HI {user},</h1>
+                <h1>Welcome to Tring Courses</h1>
+                <button onClick={handleLogout}>Logout</button>
+            </div>
+
+            <div className="tabs">
+                <button
+                    className={selectedTab === 'courseList' ? 'active' : ''}
+                    onClick={() => setSelectedTab('courseList')}
+                >
+                    Course List
+                </button>
+                <button
+                    className={selectedTab === 'yourCourses' ? 'active' : ''}
+                    onClick={() => setSelectedTab('yourCourses')}
+                >
+                    Your Courses
+                </button>
+                <button
+                    className={selectedTab === 'completedCourses' ? 'active' : ''}
+                    onClick={() => setSelectedTab('completedCourses')}
+                >
+                    Completed Courses
+                </button>
+
+            </div>
+
+            <div className="tab-content">
+                {selectedTab === 'courseList' && (
+                    <div>
+                        <h2>Course List</h2>
+
+
+                        {courses.length > 0 ? (
+                            <div className="card-container">
+                                {courses.map(course => (
+                                    <div key={course.course_id} className="course-card">
+                                        <h3>{course.course_name}</h3>
+                                        <button onClick={() => handleEnroll(course)}>Enroll</button>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <p>No courses available.</p>
+                        )}
+
+                    </div>
+                )}
+
+                {selectedTab === 'completedCourses' && (
+                    <div>
+                        <h2>Completed Courses</h2>
+                        {completedCourses.length > 0 ? (
+                            <div className="card-container">
+                                {completedCourses.map(course => (
+                                    <div key={course.course_id} className="course-card">
+                                        <h3>{course.course_name}</h3>
+                                        <p>Status: {course.status}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <p>No completed courses.</p>
+                        )}
+                    </div>
+                )}
+
+                {selectedTab === 'yourCourses' && (
+                    <div>
+                        <h2>Your Courses</h2>
+                        {yourCourses.length > 0 ? (
+                            <div className="card-container">
+                                {yourCourses.map(course => (
+                                    <div key={course.course_id} className="course-card">
+                                        <h3>{course.course_name}</h3>
+                                        <p>Status: Enrolled</p>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <p>No courses enrolled.</p>
+                        )}
+                    </div>
+                )}
+
+            </div>
+
         </>
-    )
+    );
 }
 
 export default UserDashboard;
+

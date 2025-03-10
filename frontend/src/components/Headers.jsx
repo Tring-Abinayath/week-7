@@ -14,15 +14,29 @@ function Headers() {
    const signin=()=>{
       navigate('/Signin')
   }
+  const logout = () => {
+    localStorage.setItem('isLoggedIn', false);
+    localStorage.removeItem('token');
+    navigate('/signin'); 
+  };
 
+  const isLogin = localStorage.getItem('isLoggedIn') === 'true';
 
   return (
     <div className="header">
       <h1 id='heading'>Tring Learning Platform</h1>
-      <div className="btns">
+      {console.log(isLogin)}
+      {!isLogin ? (
+        <div className="btns">
         <button className='signup' onClick={signup}>Sign up</button>
         <button className='login' onClick={signin}>Sign in</button>
       </div>
+      ):(
+        <div className="btns">
+        <button className='login' onClick={logout}>Logout</button>
+      </div>
+      )}
+      
     </div>
   )
 }

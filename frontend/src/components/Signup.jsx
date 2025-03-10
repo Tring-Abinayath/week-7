@@ -64,8 +64,7 @@ function Signup() {
     const {
         register,
         handleSubmit,
-        formState: { errors },
-        reset
+        formState: { errors }
     } = useForm();
 
     return (

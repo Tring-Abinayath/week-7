@@ -5,7 +5,83 @@
     background-color: lightcyan;
 }
 .user h1{
-    /* color:rgb(16,16,40); */
+    
     color:rgb(17, 17, 112);
     text-shadow:5px 5px 10px rgb(86, 165, 192);
 }
+.user button{
+    margin:0 15px 10px 95%;
+    padding: 4px;
+    border:1px solid black;
+    border:none;
+    border-radius: 3px;
+    background-color: rgb(60, 60, 196);
+    color: white;
+    cursor: pointer;
+}
+
+.tabs {
+    display: flex;
+}
+
+.tabs button {
+    padding: 10px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    border:none;
+    background-color: #f0f0f0;
+    width: 100%;
+}
+
+.tabs button.active {
+    background-color: #303a92;
+    color: white;
+}
+
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.course-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 200px;
+    display: flex;
+    flex-direction: column; 
+    justify-content: space-between; 
+    height: 100px;
+}
+
+.course-card button {
+    align-self: flex-end;  
+    border: 1px solid black;
+    border:none;
+    border-radius: 3px;
+    padding: 8px 12px;
+    background-color: rgb(60, 60, 196);
+    color: white;
+    cursor: pointer;
+}
+
+.course-card:hover {
+    transform: scale(1.05);
+}
+
+.course-card h3 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.course-card p {
+    font-size: 14px;
+    color: #555;
+}
+
+

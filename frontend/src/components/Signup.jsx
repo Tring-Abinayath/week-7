@@ -146,11 +146,6 @@ function Signup() {
                     <input type="submit" className='signup_btn' value="Sign up" />
                 </form>
             </div>
-
-            {/* {isUserExist &&
-                <span className='existUser'>User already exists</span>
-            } */}
-
             
         </>
     )

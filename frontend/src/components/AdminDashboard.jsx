@@ -3,6 +3,7 @@ import './AdminDashboard.css';
 import Headers from './Headers.jsx';
 import { useForm } from 'react-hook-form';
 import { useMutation, gql, useLazyQuery } from '@apollo/client';
+import { useNavigate } from 'react-router-dom';
 
 const ADD_COURSE = gql`mutation addCourse($courseName:String!){
     addCourse(course_name: $courseName)
@@ -35,6 +36,8 @@ function AdminDashboard() {
     const [addCourseBtn, setAddCourseBtn] = useState(false);
     const [courses, setCourses] = useState([]);
     const [editingCourse, setEditingCourse] = useState(null);
+    const navigate=useNavigate();
+    const [error,setError]=useState('')
 
     const [addCourseMutation] = useMutation(ADD_COURSE, {
         fetchPolicy: "no-cache",
@@ -44,6 +47,7 @@ function AdminDashboard() {
         },
         onError: (err) => {
             console.log("Error:", err.message)
+            setError(err)
         }
     })
 
@@ -157,7 +161,8 @@ function AdminDashboard() {
             <div className='addCourse'>
                 <button onClick={() => setAddCourseBtn(true)}>+ Add Courses</button>
             </div>
-
+            {error && <p>{error.message}</p>}
+            {console.log("Error:",error)}
             {addCourseBtn && (
                 <div>
                     <form onSubmit={handleSubmit(handleAddCourse)}>
@@ -193,8 +198,8 @@ function AdminDashboard() {
 
                         <div className="card-container">
                             {courses.map(course => (
-                                <div key={course.course_id} className="course-card">
-                                    <h3>{course.course_name}</h3>
+                                <div key={course.course_id} className="course-card" >
+                                    <h3 onClick={()=>navigate(`/AdminDashboard/VideoUpload/${course.course_id}`)}>{course.course_name}</h3>
                                     <div id='cardBtn'>
                                         <button onClick={() => handleEdit(course)}>Edit</button>
                                         <button onClick={() => handleDelete(course)}>Delete</button>

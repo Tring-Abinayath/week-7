@@ -25,7 +25,6 @@ function Headers() {
   return (
     <div className="header">
       <h1 id='heading'>Tring Learning Platform</h1>
-      {console.log(isLogin)}
       {!isLogin ? (
         <div className="btns">
         <button className='signup' onClick={signup}>Sign up</button>

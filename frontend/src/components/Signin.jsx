@@ -1,4 +1,4 @@
-import Home from './Headers.jsx';
+import Header from './Headers.jsx';
 import './Signin.css';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useEffect, useState } from 'react';
@@ -101,7 +101,7 @@ function Signin() {
     return (
         <>
 
-            <Home />
+            <Header />
 
             <div className="signin-containter">
 

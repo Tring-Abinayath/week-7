@@ -216,7 +216,7 @@ function UserDashboard() {
                         {yourCourses.length > 0 ? (
                             <div className="card-container">
                                 {yourCourses.map(course => (
-                                    <div key={course.course_id} className="course-card">
+                                    <div key={course.course_id} className="course-card" onClick={()=>navigate(`./Videos/${course.course_id}`)}>
                                         <h3>{course.course_name}</h3>
                                         <p>Status: Enrolled</p>
                                     </div>

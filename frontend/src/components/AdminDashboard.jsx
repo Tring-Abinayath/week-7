@@ -6,6 +6,8 @@ import { useMutation, gql, useLazyQuery } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { MdEdit, MdDelete } from "react-icons/md"
+import Swal from 'sweetalert2';
+
 
 const ADD_COURSE = gql`mutation addCourse($courseName:String!){
     addCourse(course_name: $courseName)
@@ -17,7 +19,6 @@ const GET_COURSES = gql`
         getCourses {
             course_id
             course_name
-            #status
         }
     }
 `;
@@ -78,8 +79,22 @@ function AdminDashboard() {
     const [deleteCourseMutation] = useMutation(DELETE_COURSE, {
         fetchPolicy: "no-cache",
         onCompleted: (data) => {
-            getCoursesQuery()
-            toast.success(data.deleteCourse)
+
+            Swal.fire({
+                title: 'Are you sure want to delete this course?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel!',
+                customClass: {
+                    title: 'style-title'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    getCoursesQuery()
+                    toast.success(data.deleteCourse);
+                }
+            });
         },
         onError: (err) => {
             toast.error(err.message)
@@ -186,7 +201,6 @@ function AdminDashboard() {
             )}
 
             <div>
-                {console.log("courses length:", courses.length)}
                 {courses.length > 0 ? (
                     <div className='cards'>
 

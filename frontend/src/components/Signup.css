@@ -10,9 +10,11 @@
     opacity: 0.89;
     overflow: auto;
 }
+
 .signup-container input {
     border: 1px solid #999;
 }
+
 .signup-container p{
     color:black;
 }
@@ -37,15 +39,10 @@ input {
     border-radius: 10px;
     font-size: 15px;
 }
-/* input:focus
-{
-    font-size:16px;
-    font-weight: bold;
-} */
+
 .signup_btn {
     display: block;
     margin-left:260px;
-    /* margin-top:30px; */
     margin-bottom: 10px;
     border: 1px solid #999; 
     border-radius: 10px;
@@ -58,11 +55,7 @@ input {
     color: #fff;
 
 }
-/* .signup_btn:hover
-{
-    background-color: green;
-    color:white;
-} */
+
 .password-eye-icon {
     position: absolute;
     right: 420px; 
@@ -70,7 +63,8 @@ input {
     cursor: pointer;
     font-size: 20px;  
 }
-.error
+
+.errors
 {
     display: block;
     color:red;
@@ -79,11 +73,4 @@ input {
     margin-top:5px;
 }
 
-.existUser
-{
-    color:red;
-    font-weight: bold;
-    margin-left:15px;
-    margin-top:10px;
-}
 

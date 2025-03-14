@@ -1,6 +1,6 @@
 import './Signin.css';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify'
@@ -38,12 +38,10 @@ function Signin() {
     const [signinMutation] = useMutation(SIGNIN_MUTATION, {
         fetchPolicy: "no-cache",
         onCompleted: async (data) => {
-            console.log(data)
             localStorage.setItem('token', data.signin.token)
             await getUsers()
         },
         onError: (err) => {
-            console.log("On Error:", err)
             setError(err.message)
             toast.error(err.message)
         }
@@ -52,28 +50,18 @@ function Signin() {
     const [getUsers] = useLazyQuery(GET_USERS_QUERY, {
         fetchPolicy: "no-cache",
         onCompleted: (data) => {
-            console.log("GetUser Data:", data)
-            console.log("Data getUser role", data.getUsers[0].role)
             if (data.getUsers[0].role === 'admin') {
                 navigate('/AdminDashboard')
             } else {
                 navigate('/UserDashboard')
-
             }
         },
         onError: (err) => {
-            console.log("On Error:", err)
             setError(err.message)
         }
     })
 
     const signin = async (values) => {
-
-        localStorage.setItem('isLoggedIn', true)
-        console.log("isLogin after signin", localStorage.getItem('isLoggedIn'))
-
-        console.log("values:", values)
-
         try {
             await signinMutation({
                 variables: {
@@ -81,10 +69,9 @@ function Signin() {
                     password: values.password
                 }
             })
-        } catch {
-            console.log("Error during GrahSQL request", err)
+        } catch(err) {
+            throw new Error("Error during GrahSQL request", err)
         }
-
     }
 
     const togglePasswordVisibility = () => {
@@ -101,9 +88,6 @@ function Signin() {
         <>
             <div className="container">
                 <div className="signin-container">
-
-                    {/* <h1 id='signin'>Sign In</h1> */}
-
                     <img src={lms_logo} width="210px"></img>
 
                     <form onSubmit={handleSubmit(signin)}>
@@ -121,7 +105,6 @@ function Signin() {
                         {errors.email && <span className='errors'>{errors.email.message}</span>}
 
                         <div className='passwordField'>
-
                             <input
                                 type={passwordVisible ? "text" : "password"}
                                 placeholder="Enter your password"
@@ -138,19 +121,12 @@ function Signin() {
                         </div>
                         {errors.password && <span className='errors'>{errors.password.message}</span>}
 
-
-
                         <input type="submit" className='signin_btn' value="Sign In" />
                     
                     </form>
                     <p>Don't have an account? <a href="/signup">Sign up</a></p>
                 </div>
             </div>
-
-            {/* {error &&
-                <span className='incorrectUser'>{error}</span>
-            } */}
-
         </>
     )
 }

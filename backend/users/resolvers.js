@@ -9,14 +9,10 @@ export const usersResolvers = {
         getUsers: async (_, _args, context) => {
             try {
                 const token = context.authorization;
-                console.log("Tokenaskfhasduhfksjf:", token)
                 const userId = await verifyJWT(token);
-                console.log("Userid:", userId)
                 const users = await pool.query('SELECT * FROM users WHERE user_id=$1', [userId]);
-                console.log("Users:", users.rows);
                 return users.rows;
             } catch (err) {
-                console.error(err);
                 throw new Error('Error fetching users from database');
             }
         },
@@ -25,7 +21,6 @@ export const usersResolvers = {
                 const token = context.authorization;
                 const userId = await verifyJWT(token);
                 const userCourses = await pool.query('select uc.user_id,uc.course_id,c.course_name from user_courses uc INNER JOIN courses c ON uc.course_id = c.course_id WHERE user_id=$1', [userId]);
-                console.log("User Course ------------:", userCourses.rows)
                 return userCourses.rows
             } catch (error) {
                 throw new Error('Error during graphql request', error)
@@ -50,11 +45,7 @@ export const usersResolvers = {
             return 'User Created Successfully';
         },
         signin: async (_, args) => {
-
             const jwt_key=process.env.JWT_KEY
-
-            console.log("Args:", args);
-
             const getUser = await pool.query('SELECT user_id,email, pwd FROM users WHERE email=$1', [args.email]);
             console.log("GetUser:", getUser.rows);
 
@@ -80,8 +71,6 @@ export const usersResolvers = {
             };
         },
         addUserCourses: async (_, args, context) => {
-
-            console.log("Args:", args);
             const token = context.authorization;
             const userId = await verifyJWT(token);
             await pool.query('INSERT INTO user_courses(user_id,course_id,status) VALUES($1,$2,$3)', [userId, args.course_id,'enrolled'])

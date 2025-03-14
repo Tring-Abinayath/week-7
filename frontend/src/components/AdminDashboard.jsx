@@ -44,12 +44,10 @@ function AdminDashboard() {
     const [addCourseMutation] = useMutation(ADD_COURSE, {
         fetchPolicy: "no-cache",
         onCompleted: (data) => {
-            console.log(data)
             getCoursesQuery()
             toast.success(data.addCourse)
         },
         onError: (err) => {
-            console.log("Error:", err.message)
             setError(err)
             toast.error(err.message)
         }
@@ -58,12 +56,10 @@ function AdminDashboard() {
     const [getCoursesQuery] = useLazyQuery(GET_COURSES, {
         fetchPolicy: 'no-cache',
         onCompleted: (data) => {
-            console.log('Courses Data:', data);
             const allCourses = data?.getCourses || [];
             setCourses(allCourses)
         },
         onError: (err) => {
-            console.log('Errr:', err.message);
             toast.error(err.message)
         }
     });
@@ -71,12 +67,10 @@ function AdminDashboard() {
     const [editCourseMutation] = useMutation(EDIT_COURSE, {
         fetchPolicy: "no-cache",
         onCompleted: (data) => {
-            console.log("DATA:", data)
             getCoursesQuery()
             toast.success(data.editCourse)
         },
         onError: (err) => {
-            console.log("Error:", err.message)
             toast.error(err.message)
         }
     })
@@ -84,20 +78,16 @@ function AdminDashboard() {
     const [deleteCourseMutation] = useMutation(DELETE_COURSE, {
         fetchPolicy: "no-cache",
         onCompleted: (data) => {
-            console.log('Courses Data:', data);
             getCoursesQuery()
             toast.success(data.deleteCourse)
         },
         onError: (err) => {
-            console.log("Error:", err.message)
             toast.error(err.message)
         }
     })
 
     const handleAddCourse = async (values) => {
 
-        console.log("values", values)
-        console.log("editingCOurse:", editingCourse)
         if (editingCourse) {
             try {
                 await editCourseMutation({
@@ -111,7 +101,6 @@ function AdminDashboard() {
                 throw new Error('Error during graphql request', error)
             }
         } else {
-            console.log("Values:", values);
             try {
                 await addCourseMutation({
                     variables: {
@@ -157,18 +146,14 @@ function AdminDashboard() {
     }, []);
 
     useEffect(() => {
-
         if (editingCourse) {
             setValue('course', editingCourse.course_name)
         }
     }, [editingCourse])
 
-
-
     return (
         <>
             <Headers />
-            
 
             <div className='addCourse'>
                 <button onClick={() => setAddCourseBtn(true)}>+ Add Courses</button>
@@ -197,9 +182,7 @@ function AdminDashboard() {
 
                         {errors.course && <span className='error'>{errors.course.message}</span>}
                     </form>
-
                 </div>
-
             )}
 
             <div>

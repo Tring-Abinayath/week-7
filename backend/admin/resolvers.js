@@ -1,7 +1,6 @@
 import bcrypt from 'bcryptjs';
 import pool from '../dbConnect.js';
 
-
 export const adminResolvers = {
    
     Mutation: {

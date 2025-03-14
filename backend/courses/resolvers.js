@@ -14,24 +14,18 @@ export const coursesResolvers = {
                 console.log("Courses:", courses.rows);
                 return courses.rows;
             } catch (err) {
-                console.error("Error getting courses:",err.message);
-                // throw new Error('Error fetching courses from database');
                 throw new Error(err.message);
-
             }
         }
     },
     Mutation: {
         addCourse: async (_, args, context) => {
-
-            console.log("Argsssssssssssss:", args)
             const token = context.authorization;
             const userId = await verifyJWT(token);
             if (! await isAdmin(userId)) {
 
                 throw new Error("Unauthorized")
             }
-            console.log("--------")
             const courses = await pool.query('SELECT course_name FROM courses WHERE deletedAt IS NULL')
             console.log("Select course names", courses.rows)
             const findCourse = courses.rows.find(course => course.course_name.toLowerCase() === args.course_name.toLowerCase())
@@ -45,8 +39,6 @@ export const coursesResolvers = {
 
         },
         editCourse: async (_, args, context) => {
-            console.log("-----------------------------")
-            console.log("Args:", args)
             const token = context.authorization;
             const userId = await verifyJWT(token);
             if (! await isAdmin(userId)) {
@@ -56,7 +48,6 @@ export const coursesResolvers = {
             return 'Course updated successfully'
         },
         deleteCourse: async (_, args, context) => {
-            console.log("Args:", args)
             const token = context.authorization;
             const userId = await verifyJWT(token);
             if (! await isAdmin(userId)) {

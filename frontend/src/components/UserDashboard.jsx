@@ -138,7 +138,6 @@ function UserDashboard() {
     }
 
     const handleLogout = () => {
-        localStorage.setItem('isLoggedIn', false);
         localStorage.removeItem('token');
         navigate('/');
     }
@@ -147,8 +146,6 @@ function UserDashboard() {
         <>
             <div className="user">
                 <img src={lms_logo} width={"130px"} height={"100px"}></img>
-
-                {/* <h1>Welcome to Tring LMS</h1> */}
                 <div className='userLogout'>
                     <h3> {user}</h3>
                     <button onClick={handleLogout}><MdExitToApp size={20} /></button>
@@ -180,9 +177,6 @@ function UserDashboard() {
             <div className="tab-content">
                 {selectedTab === 'courseList' && (
                     <div>
-                        {/* <h2>Course List</h2> */}
-
-
                         {courses.length > 0 ? (
                             <div className="card-container">
                                 {courses.map(course => (
@@ -201,7 +195,6 @@ function UserDashboard() {
 
                 {selectedTab === 'completedCourses' && (
                     <div>
-                        {/* <h2>Completed Courses</h2> */}
                         {completedCourses.length > 0 ? (
                             <div className="card-container">
                                 {completedCourses.map(course => (
@@ -219,7 +212,6 @@ function UserDashboard() {
 
                 {selectedTab === 'yourCourses' && (
                     <div>
-                        {/* <h2>Your Courses</h2> */}
                         {yourCourses.length > 0 ? (
                             <div className="card-container">
                                 {yourCourses.map(course => (

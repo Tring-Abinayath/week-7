@@ -18,29 +18,20 @@ const SIGNUP_MUTATION = gql`
 function Signup() {
 
     const [error, setError] = useState(null)
-
     const navigate = useNavigate();
-
     const [signupMutation] = useMutation(SIGNUP_MUTATION, {
         fetchPolicy: "no-cache",
         onCompleted: (data) => {
-            console.log("On completed data:", data)
             toast.success('User Created Successfully')
             navigate('/')
         },
         onError: (err) => {
-            console.log("On Error:", err)
             setError(err.message)
             toast.error(err.message)
         }
     })
 
     const signup = async (values) => {
-
-        console.log("After signup")
-        console.log("Values:", values)
-        console.log("After clicking submit")
-
         try {
             await signupMutation({
                 variables: {
@@ -54,7 +45,7 @@ function Signup() {
                 }
             });
         } catch (error) {
-            console.error('Error during GraphQL request', error);
+            throw new Error('Error during GraphQL request', error);
         }
     };
 
@@ -72,17 +63,12 @@ function Signup() {
 
     return (
         <>
-            {/* <Header /> */}
-
             <div className='container'>
-
                 <div className="signup-container">
-
                     {error &&
                         <span className='existUser'>{error}</span>
                     }
 
-                    {/* <h1 id='signup'>Sign Up</h1> */}
                     <img src={lms_logo} width="210px"></img>
                     <form onSubmit={handleSubmit(signup)}>
 
@@ -96,7 +82,7 @@ function Signup() {
                                 }, pattern: { value: /^[A-Za-z\s]+$/, message: "Enter valid name" }
                             })}
                         />
-                        {errors.name && <span className='error'>{errors.name.message}</span>}
+                        {errors.name && <span className='errors'>{errors.name.message}</span>}
 
                         <input
                             type="text"
@@ -108,10 +94,9 @@ function Signup() {
                                 }, pattern: { value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i, message: "Enter valid email" }
                             })}
                         />
-                        {errors.email && <span className='error'>{errors.email.message}</span>}
+                        {errors.email && <span className='errors'>{errors.email.message}</span>}
 
                         <div className='passwordField'>
-
                             <input
                                 type={passwordVisible ? "text" : "password"}
                                 placeholder="Enter your password"
@@ -125,9 +110,8 @@ function Signup() {
                             <span onClick={togglePasswordVisibility} className="eye-icon">
                                 {passwordVisible ? <FaEye /> : <FaEyeSlash />}
                             </span>
-                            {errors.password && <span className='error'>{errors.password.message}</span>}
-
                         </div>
+                        {errors.password && <span className='errors'>{errors.password.message}</span>}
 
                         <input
                             type="number"
@@ -139,7 +123,7 @@ function Signup() {
                                 }
                             })}
                         />
-                        {errors.age && <span className='error'>{errors.age.message}</span>}
+                        {errors.age && <span className='errors'>{errors.age.message}</span>}
 
                         <input
                             type="text"
@@ -151,14 +135,13 @@ function Signup() {
                                 }
                             })}
                         />
-                        {errors.phone && <span className='error'>{errors.phone.message}</span>}
+                        {errors.phone && <span className='errors'>{errors.phone.message}</span>}
 
                         <input type="submit" className='signup_btn' value="Sign up" />
                     </form>
                     <p>Already have an account? <a href="/">Sign in</a></p>
                 </div>
             </div>
-
         </>
     )
 }

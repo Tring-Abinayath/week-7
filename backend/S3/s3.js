@@ -5,16 +5,12 @@ const s3=new S3Client({
     region: process.env.REGION
 });
 export const uploadToS3=async(bucket,key)=>{
-    console.log(bucket,key)
     const command=new PutObjectCommand({
         Bucket:bucket,
         Key:key
     })
-console.log("Command:",command)
     try{
-        console.log('-------------')
         const url=await getSignedUrl(s3,command,{expiresIn:3600})
-        console.log(url)
         return url
     }catch(error){
         throw new Error(error)
@@ -22,16 +18,13 @@ console.log("Command:",command)
 }
 
 export const downloadToS3=async(bucket,key)=>{
-    console.log(bucket,key)
     const command=new GetObjectCommand({
         Bucket:bucket,
         Key:key
     })
 console.log("Command:",command)
     try{
-        console.log('-------------')
         const url=await getSignedUrl(s3,command,{expiresIn:3600})
-        console.log(url)
         return url
     }catch(error){
         throw new Error(error)

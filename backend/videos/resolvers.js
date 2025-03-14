@@ -6,11 +6,9 @@ import { isAdmin } from '../utils/isAdmin.js';
 export const videosResolvers = {
     Query: {
         getVideos: async (_, { courseId, bucket }, context) => {
-            console.log("courseId for getVideos:",courseId)
             const token = context.authorization;
             await verifyJWT(token)
             const result = await pool.query('SELECT * FROM course_videos WHERE course_id = $1', [courseId]);
-            console.log(result.rows)
             const rows = result.rows;
 
             const formattedRows = rows.map(async (row) => {
@@ -27,11 +25,7 @@ export const videosResolvers = {
         }
     },
     Mutation: {
-
         uploadVideo: async (_, args, context) => {
-
-            console.log("Args:", args)
-
             const token = context.authorization;
             const userId = await verifyJWT(token);
             if (! await isAdmin(userId)) {

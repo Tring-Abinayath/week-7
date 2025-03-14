@@ -13,7 +13,6 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-console.log("env-----------------",process.env.JWT_KEY)
 const server = new ApolloServer({
     typeDefs:[usersTypeDefs,adminTypeDefs,coursesTypeDefs,videosTypeDefs,s3TypeDefs],
     resolvers:[usersResolvers,adminResolvers,coursesResolvers,videosResolvers,s3Resolvers],

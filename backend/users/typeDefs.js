@@ -12,7 +12,6 @@ export const usersTypeDefs = gql`
     type Courses {
         course_id: Int
         course_name: String
-        #status: String # "completed" or "in-progress"
     }
     type UserCourses{
         user_id:Int

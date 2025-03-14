@@ -1,11 +1,11 @@
-import Header from './Headers.jsx';
 import './Signin.css';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useForm } from 'react-hook-form';
-
+import { toast } from 'react-toastify'
 import { gql, useLazyQuery, useMutation } from '@apollo/client'
+import lms_logo from '../assets/tring_lms_logo.png';
 
 const SIGNIN_MUTATION = gql`
     mutation signin($email:String!,$password:String!){
@@ -37,7 +37,7 @@ function Signin() {
 
     const [signinMutation] = useMutation(SIGNIN_MUTATION, {
         fetchPolicy: "no-cache",
-        onCompleted:async (data) => {
+        onCompleted: async (data) => {
             console.log(data)
             localStorage.setItem('token', data.signin.token)
             await getUsers()
@@ -45,17 +45,18 @@ function Signin() {
         onError: (err) => {
             console.log("On Error:", err)
             setError(err.message)
+            toast.error(err.message)
         }
     })
 
     const [getUsers] = useLazyQuery(GET_USERS_QUERY, {
         fetchPolicy: "no-cache",
         onCompleted: (data) => {
-            console.log("GetUser Data:",data)
-            console.log("Data getUser role",data.getUsers[0].role)
-            if(data.getUsers[0].role==='admin'){
+            console.log("GetUser Data:", data)
+            console.log("Data getUser role", data.getUsers[0].role)
+            if (data.getUsers[0].role === 'admin') {
                 navigate('/AdminDashboard')
-            }else{
+            } else {
                 navigate('/UserDashboard')
 
             }
@@ -68,8 +69,8 @@ function Signin() {
 
     const signin = async (values) => {
 
-        localStorage.setItem('isLoggedIn',true)
-        console.log("isLogin after signin",localStorage.getItem('isLoggedIn'))
+        localStorage.setItem('isLoggedIn', true)
+        console.log("isLogin after signin", localStorage.getItem('isLoggedIn'))
 
         console.log("values:", values)
 
@@ -96,58 +97,59 @@ function Signin() {
         formState: { errors }
     } = useForm();
 
-    
-
     return (
         <>
+            <div className="container">
+                <div className="signin-container">
 
-            <Header />
+                    {/* <h1 id='signin'>Sign In</h1> */}
 
-            <div className="signin-containter">
+                    <img src={lms_logo} width="210px"></img>
 
-                <h1 id='signin'>Sign In</h1>
+                    <form onSubmit={handleSubmit(signin)}>
 
+                        <input
+                            type="text"
+                            placeholder="Enter your email"
+                            name="email"
+                            {...register("email", {
+                                required: {
+                                    value: true, message: "Email is required"
+                                }, pattern: { value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i, message: "Enter valid email" }
+                            })}
+                        />
+                        {errors.email && <span className='errors'>{errors.email.message}</span>}
 
+                        <div className='passwordField'>
 
-                <form onSubmit={handleSubmit(signin)}>
-
-                    <input
-                        type="text"
-                        placeholder="Enter your email"
-                        name="email"
-                        {...register("email", {
-                            required: {
-                                value: true, message: "Email is required"
-                            }, pattern: { value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i, message: "Enter valid email" }
-                        })}
-                    />
-                    {errors.email && <span className='error'>{errors.email.message}</span>}
-                    <input
-                        type={passwordVisible ? "text" : "password"}
-                        placeholder="Enter your password"
-                        name="password"
-                        {...register("password", {
-                            required: {
-                                value: true, message: "Password is required"
-                            }
-                        })}
-                    />
-                    {errors.password && <span className='error'>{errors.password.message}</span>}
-
-                    <span onClick={togglePasswordVisibility} className="eye-icon">
-                        {passwordVisible ? <FaEye /> : <FaEyeSlash />}
-                    </span>
-
-                    <input type="submit" className='signin_btn' value="Sign In" />
+                            <input
+                                type={passwordVisible ? "text" : "password"}
+                                placeholder="Enter your password"
+                                name="password"
+                                {...register("password", {
+                                    required: {
+                                        value: true, message: "Password is required"
+                                    }
+                                })}
+                            />
+                            <span onClick={togglePasswordVisibility} className="eye-icon">
+                                {passwordVisible ? <FaEye /> : <FaEyeSlash />}
+                            </span>
+                        </div>
+                        {errors.password && <span className='errors'>{errors.password.message}</span>}
 
 
-                </form>
 
+                        <input type="submit" className='signin_btn' value="Sign In" />
+                    
+                    </form>
+                    <p>Don't have an account? <a href="/signup">Sign up</a></p>
+                </div>
             </div>
 
-            {error &&
+            {/* {error &&
                 <span className='incorrectUser'>{error}</span>
-            }
+            } */}
 
         </>
     )

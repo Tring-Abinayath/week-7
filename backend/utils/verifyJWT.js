@@ -1,6 +1,9 @@
 import jwt from 'jsonwebtoken';
 
+
+console.log("env:",process.env.JWT_KEY)
 export const verifyJWT = async (token) => {
+    const jwt_key=process.env.JWT_KEY
     let userToken;
     try {
         if (!token) {
@@ -14,13 +17,13 @@ export const verifyJWT = async (token) => {
         }
 
         console.log("userToken:", userToken)
-        const verification = await jwt.verify(userToken, 'secret')
+        const verification = await jwt.verify(userToken, jwt_key)
         console.log("--", verification)
         const data = JSON.parse(verification.data)
         console.log("dataaaa:", data)
         return data.user_id
     } catch (err) {
-        console.log(err)
+        console.log("expired:-------",err.message)
         throw new Error(err.message);
     }
 }

@@ -9,7 +9,11 @@ import {videosTypeDefs} from './videos/typeDefs.js';
 import {videosResolvers} from './videos/resolvers.js';
 import { s3TypeDefs } from './S3/typeDefs.js';
 import { s3Resolvers } from './S3/resolvers.js';
+import dotenv from 'dotenv';
 
+dotenv.config();
+
+console.log("env-----------------",process.env.JWT_KEY)
 const server = new ApolloServer({
     typeDefs:[usersTypeDefs,adminTypeDefs,coursesTypeDefs,videosTypeDefs,s3TypeDefs],
     resolvers:[usersResolvers,adminResolvers,coursesResolvers,videosResolvers,s3Resolvers],

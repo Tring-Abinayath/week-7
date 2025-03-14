@@ -2,9 +2,8 @@ import {PutObjectCommand,GetObjectCommand,S3Client} from '@aws-sdk/client-s3';
 import {getSignedUrl} from '@aws-sdk/s3-request-presigner';
 
 const s3=new S3Client({
-    region: "ap-south-1"
+    region: process.env.REGION
 });
-// const BUCKET=process.env.BUCKET;
 export const uploadToS3=async(bucket,key)=>{
     console.log(bucket,key)
     const command=new PutObjectCommand({

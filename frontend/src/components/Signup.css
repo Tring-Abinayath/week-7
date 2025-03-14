@@ -1,55 +1,72 @@
-.signup-containter {
-    border: 2px solid black;
+.signup-container {
+    border: 3px solid #fff;
+    background: #fff;
     border-radius: 10px;
     width: 600px;
-    height: 470px;
+    height: 540px;
     text-align: center;
     margin-left: 350px;
     margin-top: 20px;
+    opacity: 0.89;
     overflow: auto;
+}
+.signup-container input {
+    border: 1px solid #999;
+}
+.signup-container p{
+    color:black;
+}
+.container {
+    background: url("../assets/tring_lms_logo.png");
+    background-size: cover;
+    position: absolute;
+    height:100%;
+    width:100%;
 }
 
 #signup{
     text-align: center;   
-    color: blue;  
+    color: #0e8fa4;
 }
 
 input {
-    border: 2px solid black;
+    border: 1px solid #999;
     width: 400px;
     padding: 10px;
     margin-top: 20px;
     border-radius: 10px;
     font-size: 15px;
 }
-input:focus
+/* input:focus
 {
     font-size:16px;
     font-weight: bold;
-}
+} */
 .signup_btn {
     display: block;
     margin-left:260px;
-    margin-top:30px;
+    /* margin-top:30px; */
     margin-bottom: 10px;
-    border:3px solid black;
+    border: 1px solid #999; 
     border-radius: 10px;
     font-weight: bold;
     width:78px;
     height:40px;
     cursor: pointer;
     padding:10px;
-    background-color: lightgray;
+    background-color: #0e8fa4;
+    color: #fff;
+
 }
-.signup_btn:hover
+/* .signup_btn:hover
 {
     background-color: green;
     color:white;
-}
+} */
 .password-eye-icon {
     position: absolute;
     right: 420px; 
-    top: 58%;
+    top: 52%;
     cursor: pointer;
     font-size: 20px;  
 }

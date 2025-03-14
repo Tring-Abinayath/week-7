@@ -4,6 +4,8 @@ import Headers from './Headers.jsx';
 import { useForm } from 'react-hook-form';
 import { useMutation, gql, useLazyQuery } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { MdEdit, MdDelete } from "react-icons/md"
 
 const ADD_COURSE = gql`mutation addCourse($courseName:String!){
     addCourse(course_name: $courseName)
@@ -36,18 +38,20 @@ function AdminDashboard() {
     const [addCourseBtn, setAddCourseBtn] = useState(false);
     const [courses, setCourses] = useState([]);
     const [editingCourse, setEditingCourse] = useState(null);
-    const navigate=useNavigate();
-    const [error,setError]=useState('')
+    const navigate = useNavigate();
+    const [error, setError] = useState('')
 
     const [addCourseMutation] = useMutation(ADD_COURSE, {
         fetchPolicy: "no-cache",
         onCompleted: (data) => {
             console.log(data)
             getCoursesQuery()
+            toast.success(data.addCourse)
         },
         onError: (err) => {
             console.log("Error:", err.message)
             setError(err)
+            toast.error(err.message)
         }
     })
 
@@ -60,6 +64,7 @@ function AdminDashboard() {
         },
         onError: (err) => {
             console.log('Errr:', err.message);
+            toast.error(err.message)
         }
     });
 
@@ -68,9 +73,11 @@ function AdminDashboard() {
         onCompleted: (data) => {
             console.log("DATA:", data)
             getCoursesQuery()
+            toast.success(data.editCourse)
         },
         onError: (err) => {
             console.log("Error:", err.message)
+            toast.error(err.message)
         }
     })
 
@@ -79,9 +86,11 @@ function AdminDashboard() {
         onCompleted: (data) => {
             console.log('Courses Data:', data);
             getCoursesQuery()
+            toast.success(data.deleteCourse)
         },
         onError: (err) => {
             console.log("Error:", err.message)
+            toast.error(err.message)
         }
     })
 
@@ -154,15 +163,17 @@ function AdminDashboard() {
         }
     }, [editingCourse])
 
+
+
     return (
         <>
             <Headers />
-         
+            
+
             <div className='addCourse'>
                 <button onClick={() => setAddCourseBtn(true)}>+ Add Courses</button>
             </div>
-            {error && <p>{error.message}</p>}
-            {console.log("Error:",error)}
+
             {addCourseBtn && (
                 <div>
                     <form onSubmit={handleSubmit(handleAddCourse)}>
@@ -174,7 +185,7 @@ function AdminDashboard() {
                             {...register("course", {
                                 required: {
                                     value: true, message: "Course Name is required"
-                                }, pattern: { value: /^[A-Za-z\s]+$/, message: "Enter valid course name(String)" }
+                                }, pattern: { value: /^[A-Za-z0-9\s+#-]+$/, message: "Enter valid course name" }
                             })}
                         />
                         {editingCourse ? (
@@ -190,19 +201,19 @@ function AdminDashboard() {
                 </div>
 
             )}
-            
+
             <div>
-                <h1>Course List</h1>
+                {console.log("courses length:", courses.length)}
                 {courses.length > 0 ? (
                     <div className='cards'>
 
                         <div className="card-container">
                             {courses.map(course => (
                                 <div key={course.course_id} className="course-card" >
-                                    <h3 onClick={()=>navigate(`/AdminDashboard/VideoUpload/${course.course_id}`)}>{course.course_name}</h3>
+                                    <h3 onClick={() => navigate(`/AdminDashboard/VideoUpload/${course.course_id}`)}>{course.course_name}</h3>
                                     <div id='cardBtn'>
-                                        <button onClick={() => handleEdit(course)}>Edit</button>
-                                        <button onClick={() => handleDelete(course)}>Delete</button>
+                                        <button onClick={() => handleEdit(course)}><MdEdit size={12} /></button>
+                                        <button onClick={() => handleDelete(course)}><MdDelete size={12} /></button>
                                     </div>
                                 </div>
                             ))}

@@ -1,5 +1,21 @@
-h2{
+/* h1{
     text-align: center;
     color:blue;
-    font-size:20px;
+} */
+#upload{
+    border:1px solid black;
+    margin-left:10px;
+    border-radius:5px;
+    background-color: #0e8fa4;
+    color:white;
+    font-weight: bold;
+    padding:7px;
+}
+#upload:hover{
+    background-color:#0e8fa4;
+    cursor: pointer;
+}
+.videoInput{
+    display: flex;
+    justify-content: space-around;
 }

@@ -34,17 +34,13 @@ export const usersTypeDefs = gql`
 
     type Query {
         getUsers: [Users]
-        getCourses: [Courses]
         getUserCourses:[UserCourses]
     }
 
     type Mutation {
         signup(createUserInput: CreateUserInput!): String
         signin(email: String!, password: String!): Token
-        addCourse(course_name:String!):String
         addUserCourses(course_id:Int!,course_name:String!):String
-        deleteCourse(course_id:Int!):String
-        editCourse(course_id:Int!,course_name:String!):String
     }
 
 `;

@@ -24,7 +24,7 @@ export const usersResolvers = {
             try {
                 const token = context.authorization;
                 const userId = await verifyJWT(token);
-                const userCourses = await pool.query('SELECT * FROM user_courses WHERE user_id=$1', [userId]);
+                const userCourses = await pool.query('select uc.user_id,uc.course_id,c.course_name from user_courses uc INNER JOIN courses c ON uc.course_id = c.course_id WHERE user_id=$1', [userId]);
                 console.log("User Course ------------:", userCourses.rows)
                 return userCourses.rows
             } catch (error) {
@@ -50,13 +50,16 @@ export const usersResolvers = {
             return 'User Created Successfully';
         },
         signin: async (_, args) => {
+
+            const jwt_key=process.env.JWT_KEY
+
             console.log("Args:", args);
 
             const getUser = await pool.query('SELECT user_id,email, pwd FROM users WHERE email=$1', [args.email]);
             console.log("GetUser:", getUser.rows);
 
             if (getUser.rows.length == 0) {
-                throw new Error('User does not exist');
+                throw new Error('Incorrect Email or password');
             }
             const storedHashedPassword = getUser.rows[0].pwd;
 
@@ -70,7 +73,7 @@ export const usersResolvers = {
                     user_id: getUser.rows[0].user_id,
                     email: getUser.rows[0].email
                 })
-            }, 'secret', { expiresIn: '1h' });
+            }, jwt_key , { expiresIn: '1h' });
 
             return {
                 token: token,
@@ -81,7 +84,7 @@ export const usersResolvers = {
             console.log("Args:", args);
             const token = context.authorization;
             const userId = await verifyJWT(token);
-            await pool.query('INSERT INTO user_courses(user_id,course_id,course_name,status) VALUES($1,$2,$3,$4)', [userId, args.course_id, args.course_name, 'enrolled'])
+            await pool.query('INSERT INTO user_courses(user_id,course_id,status) VALUES($1,$2,$3)', [userId, args.course_id,'enrolled'])
             return 'User enrolled successfully'
         }
     }

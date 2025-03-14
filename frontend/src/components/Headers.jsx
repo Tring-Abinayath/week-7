@@ -1,41 +1,27 @@
 import React from 'react';
 import './Headers.css';
 import { useNavigate } from "react-router-dom"
+import lms_logo from '../assets/tring_lms_logo.png'
+import { MdExitToApp } from 'react-icons/md';
+
 
 function Headers() {
 
-  
-  const navigate=useNavigate();
 
-  const signup=()=>{
-      navigate('/Signup')
-  }
+  const navigate = useNavigate();
 
-   const signin=()=>{
-      navigate('/Signin')
-  }
-  const logout = () => {
-    localStorage.setItem('isLoggedIn', false);
+
+  const handleLogout = () => {
     localStorage.removeItem('token');
-    navigate('/signin'); 
+    navigate('/');
   };
 
-  const isLogin = localStorage.getItem('isLoggedIn') === 'true';
 
   return (
-    <div className="header">
-      <h1 id='heading'>Tring Learning Platform</h1>
-      {!isLogin ? (
-        <div className="btns">
-        <button className='signup' onClick={signup}>Sign up</button>
-        <button className='login' onClick={signin}>Sign in</button>
-      </div>
-      ):(
-        <div className="btns">
-        <button className='login' onClick={logout}>Logout</button>
-      </div>
-      )}
-      
+
+    <div className='adminHeader'>
+      <img src={lms_logo} width={"120px"} height={"100px"}></img>
+      <button onClick={handleLogout}> <MdExitToApp size={20} /> </button>
     </div>
   )
 }

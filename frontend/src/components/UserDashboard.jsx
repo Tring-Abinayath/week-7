@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react';
 import { useLazyQuery, gql, useMutation } from '@apollo/client';
 import './UserDashboard.css';
 import { useNavigate } from 'react-router-dom';
+import { MdExitToApp } from 'react-icons/md';
+import lms_logo from '../assets/tring_lms_logo.png'
+
 
 const GET_USERS = gql`
     query {
@@ -137,15 +140,19 @@ function UserDashboard() {
     const handleLogout = () => {
         localStorage.setItem('isLoggedIn', false);
         localStorage.removeItem('token');
-        navigate('/signin');
+        navigate('/');
     }
 
     return (
         <>
             <div className="user">
-                <h1>HI {user},</h1>
-                <h1>Welcome to Tring Courses</h1>
-                <button onClick={handleLogout}>Logout</button>
+                <img src={lms_logo} width={"130px"} height={"100px"}></img>
+
+                {/* <h1>Welcome to Tring LMS</h1> */}
+                <div className='userLogout'>
+                    <h3> {user}</h3>
+                    <button onClick={handleLogout}><MdExitToApp size={20} /></button>
+                </div>
             </div>
 
             <div className="tabs">
@@ -173,7 +180,7 @@ function UserDashboard() {
             <div className="tab-content">
                 {selectedTab === 'courseList' && (
                     <div>
-                        <h2>Course List</h2>
+                        {/* <h2>Course List</h2> */}
 
 
                         {courses.length > 0 ? (
@@ -194,7 +201,7 @@ function UserDashboard() {
 
                 {selectedTab === 'completedCourses' && (
                     <div>
-                        <h2>Completed Courses</h2>
+                        {/* <h2>Completed Courses</h2> */}
                         {completedCourses.length > 0 ? (
                             <div className="card-container">
                                 {completedCourses.map(course => (
@@ -212,11 +219,11 @@ function UserDashboard() {
 
                 {selectedTab === 'yourCourses' && (
                     <div>
-                        <h2>Your Courses</h2>
+                        {/* <h2>Your Courses</h2> */}
                         {yourCourses.length > 0 ? (
                             <div className="card-container">
                                 {yourCourses.map(course => (
-                                    <div key={course.course_id} className="course-card" onClick={()=>navigate(`./Videos/${course.course_id}`)}>
+                                    <div key={course.course_id} className="course-card" onClick={() => navigate(`./Videos/${course.course_id}`)}>
                                         <h3>{course.course_name}</h3>
                                         <p>Status: Enrolled</p>
                                     </div>

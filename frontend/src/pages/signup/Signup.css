@@ -19,7 +19,7 @@
     color:black;
 }
 .container {
-    background: url("../assets/tring_lms_logo.png");
+    background: url("../../assets/tring_lms_logo.png");
     background-size: cover;
     position: absolute;
     height:100%;

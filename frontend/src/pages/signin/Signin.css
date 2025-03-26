@@ -3,7 +3,7 @@ margin: 0;
  }
 
  .container {
-    background: url("../assets/lms_bg.jpg");
+    background: url("../../assets/lms_bg.jpg");
     background-position: bottom;
     background-size: cover;
     position: absolute;

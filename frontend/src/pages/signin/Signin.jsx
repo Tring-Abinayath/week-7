@@ -4,36 +4,15 @@ import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify'
-import { gql, useLazyQuery, useMutation } from '@apollo/client'
-import lms_logo from '../assets/tring_lms_logo.png';
-
-const SIGNIN_MUTATION = gql`
-    mutation signin($email:String!,$password:String!){
-        signin(email:$email,password:$password){
-            token   
-            #email
-        }
-    }
-`;
-
-const GET_USERS_QUERY = gql`
-    query{
-        getUsers {
-            user_id
-            user_name
-            email
-            role
-        }
-    }
-`;
-
-
+import { useLazyQuery, useMutation } from '@apollo/client'
+import lms_logo from '../../assets/tring_lms_logo.png';
+import { GET_USERS } from '../../graphql/queries/queries.js';
+import { SIGNIN_MUTATION } from '../../graphql/mutations/mutations.js';
 
 function Signin() {
 
     const [passwordVisible, setPasswordVisible] = useState(false);
     const navigate = useNavigate();
-    const [error, setError] = useState(null)
 
     const [signinMutation] = useMutation(SIGNIN_MUTATION, {
         fetchPolicy: "no-cache",
@@ -42,14 +21,14 @@ function Signin() {
             await getUsers()
         },
         onError: (err) => {
-            setError(err.message)
             toast.error(err.message)
         }
     })
 
-    const [getUsers] = useLazyQuery(GET_USERS_QUERY, {
+    const [getUsers] = useLazyQuery(GET_USERS, {
         fetchPolicy: "no-cache",
         onCompleted: (data) => {
+            console.log("Data:",data)
             if (data.getUsers[0].role === 'admin') {
                 navigate('/AdminDashboard')
             } else {
@@ -57,7 +36,7 @@ function Signin() {
             }
         },
         onError: (err) => {
-            setError(err.message)
+            console.log("Error in getUsers:",err)
         }
     })
 
@@ -70,7 +49,7 @@ function Signin() {
                 }
             })
         } catch(err) {
-            throw new Error("Error during GrahSQL request", err)
+            console.log("Error in signin:",err)
         }
     }
 

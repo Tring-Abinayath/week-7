@@ -3,30 +3,22 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom"
 import { useForm } from 'react-hook-form';
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { toast } from 'react-toastify';
-import lms_logo from '../assets/tring_lms_logo.png';
-
-
-const SIGNUP_MUTATION = gql`
-    mutation signup($createUserInput:CreateUserInput!){
-        signup(createUserInput:$createUserInput)
-    }
-`;
-
+import lms_logo from '../../assets/tring_lms_logo.png';
+import { SIGNUP_MUTATION } from '../../graphql/mutations/mutations.js';
 
 function Signup() {
 
-    const [error, setError] = useState(null)
     const navigate = useNavigate();
     const [signupMutation] = useMutation(SIGNUP_MUTATION, {
         fetchPolicy: "no-cache",
         onCompleted: (data) => {
-            toast.success('User Created Successfully')
+            console.log("Data:",data)
+            toast.success(data.signup)
             navigate('/')
         },
         onError: (err) => {
-            setError(err.message)
             toast.error(err.message)
         }
     })
@@ -45,7 +37,7 @@ function Signup() {
                 }
             });
         } catch (error) {
-            throw new Error('Error during GraphQL request', error);
+            console.log('Error during signup request', error);
         }
     };
 
@@ -65,9 +57,6 @@ function Signup() {
         <>
             <div className='container'>
                 <div className="signup-container">
-                    {error &&
-                        <span className='existUser'>{error}</span>
-                    }
 
                     <img src={lms_logo} width="210px"></img>
                     <form onSubmit={handleSubmit(signup)}>

@@ -1,10 +1,10 @@
 import React from 'react';
-import './Headers.css';
+import './Header.css';
 import { useNavigate } from "react-router-dom"
-import lms_logo from '../assets/tring_lms_logo.png'
+import lms_logo from '../../assets/tring_lms_logo.png'
 import { MdExitToApp } from 'react-icons/md';
 
-function Headers() {
+function Header() {
 
   const navigate = useNavigate();
   const handleLogout = () => {
@@ -19,5 +19,5 @@ function Headers() {
     </div>
   )
 }
-export default Headers;
+export default Header;
 

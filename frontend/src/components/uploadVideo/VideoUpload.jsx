@@ -1,28 +1,16 @@
-import { useEffect, useState } from 'react';
-import { gql, useLazyQuery, useMutation } from '@apollo/client';
+import { useState } from 'react';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import './VideoUpload.css'
-import Videos from './Videos.jsx'
-import Headers from './Headers.jsx';
+import Videos from '../videoList/Videos.jsx'
+import Header from '../header/Header.jsx';
 import { useForm } from 'react-hook-form';
+import { GET_UPLOAD_PRESIGNEDURL_QUERY } from '../../graphql/queries/queries.js';
+import { UPLOAD_VIDEO_QUERY } from '../../graphql/mutations/mutations.js';
 
 const BUCKET = import.meta.env.VITE_BUCKET;
-
-const GET_UPLOAD_PRESIGNEDURL_QUERY = gql`
-  query getUploadPreSignedUrl($getPreSignedUrl: GetPreSignedUrl!){
-    getUploadPreSignedUrl(getPreSignedUrl: $getPreSignedUrl) {
-      url
-    }
-  }
-`;
-
-const UPLOAD_VIDEO_QUERY = gql`
-  mutation uploadVideo($courseId:Int!,$key:String!){
-    uploadVideo(courseId:$courseId,key:$key)
-  }
- `;
 
 const VideoUpload = () => {
   const [file, setFile] = useState(null);
@@ -32,12 +20,13 @@ const VideoUpload = () => {
   const [uploadVideo] = useMutation(UPLOAD_VIDEO_QUERY, {
     fetchPolicy: 'no-cache',
     onCompleted: (data) => {
+      console.log("ONCOMPLETE",data)
       setLoading(false)
       toast.success(data.uploadVideo)
     },
     onError: (err) => {
       setLoading(false)
-      throw new Error("Error during getVideo request:", err.message)
+      console.log("Error during uploadVideo request:", err)
     }
   })
 
@@ -47,12 +36,15 @@ const VideoUpload = () => {
       const url = data.getUploadPreSignedUrl.url;
       const splitUrl = url.split('?')[0];
       const finalUrl = splitUrl.split(`https://${BUCKET}.s3.ap-south-1.amazonaws.com/`)[1]
+      console.log('FILE:',file)
+      console.log("Final url:",finalUrl)
       const response = await axios.put(url, file, {
         headers: {
           'Content-Type': 'application/octet-stream',
           'Access-Control-Allow-Origin': '*'
         }
       })
+
       if (response.status === 200) {
         try {
           await uploadVideo({
@@ -62,7 +54,7 @@ const VideoUpload = () => {
             }
           })
         } catch (error) {
-          throw new Error("Error during upload video:", error.message)
+          console.log("Error during upload video:", error)
         }
       }
     },
@@ -99,7 +91,7 @@ const VideoUpload = () => {
 
     } catch (error) {
       setLoading(false)
-      throw new Error('Error uploading video.', error);
+      console.log('Error in getUploadPreSignedUrl', error);
     }
     reset()
   }
@@ -117,7 +109,7 @@ const VideoUpload = () => {
 
   return (
     <>
-      <Headers />
+      <Header />
 
       <div className='videoInput'>
 

@@ -1,11 +1,11 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Signup from './components/Signup.jsx';
-import Signin from './components/Signin.jsx';
-import UserDashboard from './components/UserDashboard.jsx'
-import AdminDashboard from './components/AdminDashboard.jsx'
-import VideoUpload from './components/VideoUpload.jsx'
-import Videos from './components/Videos.jsx'
+import Signup from './pages/signup/Signup.jsx';
+import Signin from './pages/signin/Signin.jsx';
+import UserDashboard from './pages/user/UserDashboard.jsx'
+import AdminDashboard from './pages/admin/AdminDashboard.jsx'
+import VideoUpload from './components/uploadVideo/VideoUpload.jsx'
+import Videos from './components/videoList/Videos.jsx'
 import { ToastContainer } from 'react-toastify';
 
 
@@ -26,7 +26,7 @@ function App() {
 
       <ToastContainer
         position="top-center"
-        autoClose={1000}
+        autoClose={1500}
         pauseOnHover={false}
         hideProgressBar={true}
       />

@@ -1,15 +1,15 @@
-import pool from '../dbConnect.js';
-import { downloadToS3 } from '../S3/s3.js';
+import { downloadToS3 } from '../s3/s3.js';
 import { verifyJWT } from '../utils/verifyJWT.js';
 import { isAdmin } from '../utils/isAdmin.js';
+import { getVideos,uploadVideo } from './videos.service.js';
 
 export const videosResolvers = {
     Query: {
         getVideos: async (_, { courseId, bucket }, context) => {
             const token = context.authorization;
             await verifyJWT(token)
-            const result = await pool.query('SELECT * FROM course_videos WHERE course_id = $1', [courseId]);
-            const rows = result.rows;
+            const rows=await getVideos(courseId)
+            console.log("ROWS:",rows)
 
             const formattedRows = rows.map(async (row) => {
                 const signedUrl = await downloadToS3(bucket, row.video_url)
@@ -32,11 +32,7 @@ export const videosResolvers = {
                 throw new Error("Unauthorized")
             }
 
-            const result = await pool.query(
-                'INSERT INTO course_videos (course_id, video_url) VALUES ($1, $2)',
-                [args.courseId, args.key]
-            );
-
+            uploadVideo(args)
             return "Video Uploaded Successfully";
         }
     }

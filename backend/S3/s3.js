@@ -22,7 +22,6 @@ export const downloadToS3=async(bucket,key)=>{
         Bucket:bucket,
         Key:key
     })
-console.log("Command:",command)
     try{
         const url=await getSignedUrl(s3,command,{expiresIn:3600})
         return url

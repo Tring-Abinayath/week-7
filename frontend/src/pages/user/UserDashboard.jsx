@@ -3,46 +3,9 @@ import { useLazyQuery, gql, useMutation } from '@apollo/client';
 import './UserDashboard.css';
 import { useNavigate } from 'react-router-dom';
 import { MdExitToApp } from 'react-icons/md';
-import lms_logo from '../assets/tring_lms_logo.png'
-
-
-const GET_USERS = gql`
-    query {
-        getUsers {
-            user_id
-            user_name
-            email
-        }
-    }
-`;
-
-const GET_COURSES = gql`
-    query {
-        getCourses {
-            course_id
-            course_name
-            #status
-        }
-    }
-`;
-
-const ADD_USER_COURSES = gql`
-    mutation addUserCourses($courseId:Int!,$courseName:String!){
-        addUserCourses(course_id:$courseId,course_name:$courseName)
-    }
-`;
-
-const GET_USER_COURSES = gql`
-    query{
-        getUserCourses{
-            user_id
-            course_id
-            course_name
-        }
-    }
-`;
-
-
+import lms_logo from '../../assets/tring_lms_logo.png'
+import { GET_USERS,GET_COURSES,GET_USER_COURSES } from '../../graphql/queries/queries.js';
+import { ADD_USER_COURSES } from '../../graphql/mutations/mutations.js';
 
 function UserDashboard() {
     const [user, setUser] = useState(null);
@@ -107,7 +70,6 @@ function UserDashboard() {
 
 
     useEffect(() => {
-        console.log("Inside useeffect")
         getUsersQuery();
         getCoursesQuery();
         getUserCoursesQuery();
@@ -126,7 +88,7 @@ function UserDashboard() {
                 }
             })
         } catch (error) {
-            throw new Error("Error during graphql request", error)
+            console.log("Error during addUsersCoursesMutation request", error)
         }
 
     };

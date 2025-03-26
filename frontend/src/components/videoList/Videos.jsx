@@ -1,19 +1,10 @@
-import { useLazyQuery, gql } from '@apollo/client';
+import { useLazyQuery} from '@apollo/client';
 import { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player'
 import { useParams } from 'react-router-dom';
 import './Videos.css'
+import {GET_VIDEOS_QUERY} from '../../graphql/queries/queries.js'
 
-const GET_VIDEOS_QUERY = gql`
-    query getVideos($courseId: Int!,$bucket:String!){
-        getVideos(courseId: $courseId,bucket: $bucket) {
-            videoId
-            courseId
-            videoUrl
-            preSignedUrl
-        }
-    }   
-`;
 
 function Videos() {
     const BUCKET = import.meta.env.VITE_BUCKET
@@ -26,7 +17,7 @@ function Videos() {
             setVideoData(data?.getVideos || [])
         },
         onError: (err) => {
-            throw new Error("Error during getVideos:", err.message)
+            console.log("Error during getVideos:", err)
         }
     })
 

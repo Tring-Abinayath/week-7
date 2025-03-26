@@ -1,46 +1,20 @@
 import { useState, useEffect } from 'react';
 import './AdminDashboard.css';
-import Headers from './Headers.jsx';
+import Header from '../../components/header/Header.jsx';
 import { useForm } from 'react-hook-form';
-import { useMutation, gql, useLazyQuery } from '@apollo/client';
+import { useMutation,useLazyQuery } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { MdEdit, MdDelete } from "react-icons/md"
 import Swal from 'sweetalert2';
-
-
-const ADD_COURSE = gql`mutation addCourse($courseName:String!){
-    addCourse(course_name: $courseName)
-  }
-`;
-
-const GET_COURSES = gql`
-    query {
-        getCourses {
-            course_id
-            course_name
-        }
-    }
-`;
-
-const EDIT_COURSE = gql`
-    mutation editCourse($courseId:Int!,$courseName:String!){
-        editCourse(course_id:$courseId,course_name:$courseName)
-    }
-`;
-
-const DELETE_COURSE = gql`
-    mutation deleteCourse($courseId:Int!){
-        deleteCourse(course_id:$courseId)
-    }
-`;
+import { GET_COURSES } from '../../graphql/queries/queries.js';
+import { ADD_COURSE,EDIT_COURSE,DELETE_COURSE } from '../../graphql/mutations/mutations.js';
 
 function AdminDashboard() {
     const [addCourseBtn, setAddCourseBtn] = useState(false);
     const [courses, setCourses] = useState([]);
     const [editingCourse, setEditingCourse] = useState(null);
     const navigate = useNavigate();
-    const [error, setError] = useState('')
 
     const [addCourseMutation] = useMutation(ADD_COURSE, {
         fetchPolicy: "no-cache",
@@ -49,7 +23,6 @@ function AdminDashboard() {
             toast.success(data.addCourse)
         },
         onError: (err) => {
-            setError(err)
             toast.error(err.message)
         }
     })
@@ -113,7 +86,7 @@ function AdminDashboard() {
                 })
                 setEditingCourse(null)
             } catch (error) {
-                throw new Error('Error during graphql request', error)
+                console.log('Error during editCourseMutation request', error)
             }
         } else {
             try {
@@ -123,7 +96,7 @@ function AdminDashboard() {
                     }
                 })
             } catch (error) {
-                throw new Error("Error during graphql request", error)
+                console.log("Error during addCourseMutation request", error)
             }
 
         }
@@ -144,7 +117,7 @@ function AdminDashboard() {
                 }
             })
         } catch (error) {
-            throw new Error('Error during graphql request', error)
+            console.log('Error during deleteCourseMutation request', error)
         }
     }
 
@@ -168,7 +141,7 @@ function AdminDashboard() {
 
     return (
         <>
-            <Headers />
+            <Header />
 
             <div className='addCourse'>
                 <button onClick={() => setAddCourseBtn(true)}>+ Add Courses</button>
